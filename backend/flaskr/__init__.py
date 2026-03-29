@@ -1,5 +1,4 @@
 import os
-import json
 import sys
 from flask import Flask, request, abort, jsonify, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -80,13 +79,14 @@ def create_app(test_config=None):
     @app.route('/questions', methods=['POST'])
     def post_question():
         # if the request sent was a search request
-        if('searchTerm' in json.loads(request.data)):
-            search_term = json.loads(request.data)['searchTerm']
+        body = request.get_json()
+        if('searchTerm' in body):
+            search_term = body['searchTerm']
             questions = Question.query.filter(Question.question.ilike('%' +
                                               search_term + '%')).all()
         # if not, it was a request to add a new question
         else:
-            question_data = json.loads(request.data)
+            question_data = body
 
             # If the question or answer sent are empty, returns an error.
             # Otherwise creates a new Question object.
@@ -188,9 +188,10 @@ def create_app(test_config=None):
         # Sets the next question to '' in order to account for 'no questions
         # left' case. Gets the previous questions and category ID from request.
         next_question = ''
-        category = json.loads(request.data)['quiz_category']
+        body = request.get_json()
+        category = body['quiz_category']
         category_id = int(category['id'])
-        previous_questions = json.loads(request.data)['previous_questions']
+        previous_questions = body['previous_questions']
 
         # if the category number is 0, the user chose 'all', so all questions
         # are valid
@@ -226,7 +227,7 @@ def create_app(test_config=None):
             'message': 'Bad request.'
         }), 400
 
-# Error handler for "not found" cases
+    # Error handler for "not found" cases
     @app.errorhandler(404)
     def not_found_handler(error):
         return jsonify({

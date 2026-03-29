@@ -1,16 +1,25 @@
-.vscode
-__pycache__
-venv
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.egg-info/
+dist/
+build/
+venv/
+.env
 
-# OS generated files #
-######################
+# Node
+node_modules/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
-ehthumbs.db
 Thumbs.db
-
-## Node_modules
-node_modules
+ehthumbs.db
